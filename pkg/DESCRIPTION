@@ -1,0 +1,15 @@
+Package: dfdb.RODBC
+Type: Package
+Title: Access Data Tables in an RODBC Data Base as Pseudo-Dataframes
+Version: 0.1-0
+Date: 2008-11-29
+Author: John Fox and Oswaldo Cruz
+Maintainer: John Fox <jfox@mcmaster.ca>
+Depends: RODBC
+Description: This package contains functions that allow the user to treat data
+  tables in an ODBC-accessible data base as if they were data frames, including
+  the ability to access subsets of the rows and columns of the table and to
+  modify the table; row "subscripts" can be specified as SQL queries.
+License: GPL (>= 2)
+LazyLoad: yes
+LazyData: yes

@@ -1,0 +1,19 @@
+# last modified 28 November 2008 by J. Fox
+
+export(odbcDataset)
+ 
+S3method("$", odbcDataset)
+S3method("[", odbcDataset)
+S3method("[[", odbcDataset)
+S3method(as.data.frame, odbcDataset)
+S3method(as.list, odbcDataset)
+S3method(as.matrix, odbcDataset)
+S3method(dim, odbcDataset)
+S3method(dimnames, odbcDataset)
+S3method(names, odbcDataset)
+S3method(print, odbcDataset)
+S3method(row.names, odbcDataset)
+S3method(summary, odbcDataset)
+S3method(with, odbcDataset)
+
+
