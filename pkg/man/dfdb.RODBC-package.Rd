@@ -16,7 +16,7 @@ This package contains functions that allow the user to treat data
 Package: \tab dfdb.RODBC\cr
 Type: \tab Package\cr
 Version: \tab 0.1-0\cr
-Date: \tab 2008-11-29\cr
+Date: \tab 2008-12-02\cr
 License: \tab GPL (>= 2)\cr
 LazyLoad: \tab yes\cr
 }

@@ -2,8 +2,8 @@ Package: dfdb.RODBC
 Type: Package
 Title: Access Data Tables in an RODBC Data Base as Pseudo-Dataframes
 Version: 0.1-0
-Date: 2008-11-29
-Author: John Fox and Oswaldo Cruz
+Date: 2008-12-02
+Author: Oswaldo Cruz and John Fox
 Maintainer: John Fox <jfox@mcmaster.ca>
 Depends: RODBC
 Description: This package contains functions that allow the user to treat data
