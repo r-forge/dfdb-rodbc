@@ -59,3 +59,39 @@ with.SQLiteDataset <- function(data, expr, rows,  ...){
         else data[rows, cols, drop=FALSE] 
     eval(substitute(expr), Data)
 }
+
+within.SQLiteDataset <- function(data, expr, rows,  ...){
+	vars <- all.vars(substitute(expr))
+	cols <- vars[vars %in% names(data)]
+	Data <- if (missing(rows)) data[, cols, drop=FALSE]
+			else data[rows, cols, drop=FALSE]
+	old.names <- colnames(Data)         
+	# next few lines adapted from within.data.frame()
+	env <- evalq(environment(), Data)
+	eval(substitute(expr), env)
+	lst <- as.list(env)
+	lst <- lst[!sapply(lst, is.null)]
+	nD <- length(del <-setdiff(old.names, (nl <- names(lst))))
+	Data[nl] <- lst
+	if (nD) Data[del] <- if (nD == 1) NULL else vector("list", nD) 
+	# end of adapted lines
+	for (var in old.names) Data[var] <- NULL
+	original.table <- table.name(data)
+	temp.table <- paste(original.table, "_temp", sep="")
+	con <- connection(data)
+	dbGetQuery(con, "PRAGMA ASYNCHRONOUS=0")
+	new.names <- colnames(Data)
+	Data$row_names_2 <- rownames(Data)
+	dbWriteTable(con, temp.table, Data, row.names=FALSE, overwrite=TRUE)
+	command <- paste("CREATE TABLE ", temp.table, "_2 AS SELECT ",
+			paste(c("row_names", colnames(data), new.names), collapse=","),
+			" FROM ", original.table, " LEFT OUTER JOIN ",
+			temp.table, " ON ", original.table, ".row_names = ", temp.table, ".row_names_2;", sep="")
+	dbGetQuery(con, command)
+	backup.table <- paste(original.table, "_backup", sep="")
+	if (dbExistsTable(con, backup.table)) dbGetQuery(con, paste("DROP TABLE", backup.table)) 
+	dbGetQuery(con, paste("ALTER TABLE", original.table, "RENAME TO", backup.table))
+	dbGetQuery(con, paste("DROP TABLE", temp.table))
+	dbGetQuery(con, paste("ALTER TABLE ", temp.table, "_2 RENAME TO ", original.table, sep=""))
+	assign(deparse(substitute(data)), SQLiteDataset(con, original.table), envir=parent.frame())
+}

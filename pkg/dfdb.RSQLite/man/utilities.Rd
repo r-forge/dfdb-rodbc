@@ -14,6 +14,7 @@
 \alias{table.name}
 \alias{table.name.SQLiteDataset}
 \alias{with.SQLiteDataset}
+\alias{within.SQLiteDataset}
 
 \title{
 SQLiteDataset Utilities
@@ -37,6 +38,7 @@ row.name(dataset, ...)
 table.name(dataset, ...)
 \method{table.name}{SQLiteDataset}(dataset, ...)
 \method{with}{SQLiteDataset}(data, expr, rows,  ...)
+\method{within}{SQLiteDataset}(data, expr, rows,  ...)
 }
 
 \arguments{
@@ -48,6 +50,7 @@ table.name(dataset, ...)
 
 \details{
 Most of these functions report information about a SQLiteDataset object, and are self-explanatory. 
+The \code{within} method can be used to add variables to the database table.
 }
 
 \value{
@@ -60,7 +63,8 @@ John Fox, \email{jfor@mcmaster.ca}.
 
 
 \seealso{
-\code{\link{SQLiteDataset}}, \code{\link{dim}}, \code{\link{dimnames}}, \code{\link{names}}, \code{\link{rownames}}, \code{\link{with}}
+\code{\link{SQLiteDataset}}, \code{\link{dim}}, \code{\link{dimnames}}, \code{\link{names}}, 
+\code{\link{rownames}}, \code{\link{with}}, \code{\link{within}}
 }
 
 \examples{
@@ -80,6 +84,8 @@ row.names(Arrests)
 table.name(Arrests)
 with(Arrests, mean(Rape))
 with(Arrests, mean(Rape), rows="Murder > 10")
+within(Arrests, logMurder <- log(Murder))
+with(Arrests, mean(logMurder))
 dbDisconnect(con)
 }
 

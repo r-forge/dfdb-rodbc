@@ -1,4 +1,4 @@
-# last modified 30 November 2009 by J. Fox
+# last modified 1 December 2009 by J. Fox
 
 export(col.classes)
 export(col.names)
@@ -26,3 +26,4 @@ S3method(row.names, SQLiteDataset)
 S3method(summary, SQLiteDataset)
 S3method(table.name, SQLiteDataset)
 S3method(with, SQLiteDataset)
+S3method(within, SQLiteDataset)
