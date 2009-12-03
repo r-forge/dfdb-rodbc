@@ -1,8 +1,9 @@
-# last modified 1 December 2009 by J. Fox
+# last modified 3 December 2009 by J. Fox
 
 export(col.classes)
 export(col.names)
 export(connection)
+export(database)
 export(read.db)
 export(row.name)
 export(SQLiteDataset)
@@ -14,9 +15,11 @@ S3method("[[", SQLiteDataset)
 S3method(as.data.frame, SQLiteDataset)
 S3method(as.list, SQLiteDataset)
 S3method(as.matrix, SQLiteDataset)
+S3method(close, SQLiteDataset)
 S3method(col.classes, SQLiteDataset)
 S3method(col.names, SQLiteDataset)
 S3method(connection, SQLiteDataset)
+S3method(database, SQLiteDataset)
 S3method(dim, SQLiteDataset)
 S3method(dimnames, SQLiteDataset)
 S3method(names, SQLiteDataset)

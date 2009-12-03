@@ -5,6 +5,8 @@
 \alias{col.names.SQLiteDataset}
 \alias{connection}
 \alias{connection.SQLiteDataset}
+\alias{database}
+\alias{database.SQLiteDataset}
 \alias{dim.SQLiteDataset}
 \alias{dimnames.SQLiteDataset}
 \alias{names.SQLiteDataset}
@@ -29,6 +31,8 @@ col.names(dataset, ...)
 \method{col.names}{SQLiteDataset}(dataset, ...) 
 connection(dataset, ...)
 \method{connection}{SQLiteDataset}(dataset, ...)
+database(dataset, ...)
+\method{database}{SQLiteDataset}(dataset, ...)
 \method{dim}{SQLiteDataset}(x)
 \method{dimnames}{SQLiteDataset}(x)
 \method{names}{SQLiteDataset}(x)
@@ -72,7 +76,8 @@ dr <- dbDriver("SQLite")
 tfile <- tempfile()
 con <- dbConnect(dr, dbname = tfile)
 dbWriteTable(con, "USArrests", USArrests)
-Arrests <- SQLiteDataset(con, "USArrests")
+dbDisconnect(con)
+Arrests <- SQLiteDataset("USArrests", database=tfile)
 col.classes(Arrests)
 col.names(Arrests)
 connection(Arrests)
@@ -86,7 +91,7 @@ with(Arrests, mean(Rape))
 with(Arrests, mean(Rape), rows="Murder > 10")
 within(Arrests, logMurder <- log(Murder))
 with(Arrests, mean(logMurder))
-dbDisconnect(con)
+close(Arrests)
 }
 
 \keyword{ manip }

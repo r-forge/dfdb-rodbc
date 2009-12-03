@@ -42,11 +42,12 @@ dr <- dbDriver("SQLite")
 tfile <- tempfile()
 con <- dbConnect(dr, dbname = tfile)
 dbWriteTable(con, "USArrests", USArrests)
-Arrests <- SQLiteDataset(con, "USArrests")
+dbDisconnect(con)
+Arrests <- SQLiteDataset("USArrests", database=tfile)
 as.data.frame(Arrests)
 as.list(Arrests)
 as.matrix(Arrests)
-dbDisconnect(con)
+close(Arrests)
 }
 
 \keyword{ manip }

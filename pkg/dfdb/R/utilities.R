@@ -23,6 +23,13 @@ connection.SQLiteDataset <- function(dataset, ...) {
     dataset$conn
 }
 
+database <- function(dataset, ...) UseMethod("database")
+
+database.SQLiteDataset <- function(dataset, ...) {
+	dataset <- unclass(dataset)
+	dataset$database
+}
+
 dim.SQLiteDataset <- function(x) {
     nrow <- dbGetQuery(connection(x), paste("select count(*) from", table.name(x)))[[1, 1]]
     c(nrow, length(names(x)))
@@ -38,7 +45,7 @@ row.name <- function(dataset, ...) UseMethod("row.name")
 
 row.name.SQLiteDataset <- function(dataset, ...) {
     dataset <- unclass(dataset)
-    dataset$row.name
+    if (isTRUE(dataset$row.name)) "row_names" else ""
 }
 
 row.names.SQLiteDataset <- function(x){
@@ -104,5 +111,5 @@ within.SQLiteDataset <- function(data, expr, rows,  ...){
 	dbGetQuery(con, paste("ALTER TABLE", original.table, "RENAME TO", backup.table))
 	dbGetQuery(con, paste("DROP TABLE", temp.table))
 	dbGetQuery(con, paste("ALTER TABLE ", temp.table, "_2 RENAME TO ", original.table, sep=""))
-	assign(deparse(substitute(data)), SQLiteDataset(con, original.table), envir=parent.frame())
+	assign(deparse(substitute(data)), SQLiteDataset(original.table, database=database(data)), envir=parent.frame())
 }

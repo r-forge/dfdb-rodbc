@@ -45,11 +45,12 @@ dr <- dbDriver("SQLite")
 tfile <- tempfile()
 con <- dbConnect(dr, dbname = tfile)
 dbWriteTable(con, "USArrests", USArrests)
-Arrests <- SQLiteDataset(con, "USArrests")
+dbDisconnect(con)
+Arrests <- SQLiteDataset("USArrests", database=tfile)
 Arrests$Murder
 Arrests[["Murder"]]
 Arrests["Murder > 10", c("Murder", "Rape")]
-dbDisconnect(con)
+close(Arrests)
 }
 
 \keyword{ manip }
