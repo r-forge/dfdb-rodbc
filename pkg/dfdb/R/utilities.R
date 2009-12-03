@@ -1,5 +1,7 @@
 # utility functions and methods for SQLiteDataset objects
 
+# last modified 3 December 2009 by J. Fox
+
 col.classes <- function(dataset, ...) UseMethod("col.classes")
 
 col.classes.SQLiteDataset <- function(dataset, ...) {
@@ -61,6 +63,7 @@ with.SQLiteDataset <- function(data, expr, rows,  ...){
 }
 
 within.SQLiteDataset <- function(data, expr, rows,  ...){
+	con <- connection(data)
 	vars <- all.vars(substitute(expr))
 	cols <- vars[vars %in% names(data)]
 	Data <- if (missing(rows)) data[, cols, drop=FALSE]
@@ -78,18 +81,24 @@ within.SQLiteDataset <- function(data, expr, rows,  ...){
 	for (var in old.names) Data[var] <- NULL
 	original.table <- table.name(data)
 	temp.table <- paste(original.table, "_temp", sep="")
+	command <- paste("CREATE INDEX _ORIGINAL_INDEX ON", original.table, "(", row.name(data), ")")
+	dbGetQuery(con, command)
 	con <- connection(data)
-	dbGetQuery(con, "PRAGMA ASYNCHRONOUS=0")
+#	dbGetQuery(con, "PRAGMA ASYNCHRONOUS=0")
 	new.names <- colnames(Data)
 	Data$row_names_2 <- rownames(Data)
 	dbWriteTable(con, temp.table, Data, row.names=FALSE, overwrite=TRUE)
+	command <- paste("CREATE INDEX _TEMP_INDEX ON", temp.table, "(row_names_2)")
+	dbGetQuery(con, command)
 	command <- paste("CREATE TABLE ", temp.table, "_2 AS SELECT ",
 			paste(c("row_names", colnames(data), new.names), collapse=","),
 			" FROM ", original.table, " LEFT OUTER JOIN ",
 			temp.table, " ON ", original.table, ".row_names = ", temp.table, ".row_names_2;", sep="")
 	dbGetQuery(con, command)
 	backup.table <- paste(original.table, "_backup", sep="")
-	if (dbExistsTable(con, backup.table)) dbGetQuery(con, paste("DROP TABLE", backup.table)) 
+	if (dbExistsTable(con, backup.table)) dbGetQuery(con, paste("DROP TABLE", backup.table))
+	dbGetQuery(con, "DROP INDEX _ORIGINAL_INDEX")
+	dbGetQuery(con, "DROP INDEX _TEMP_INDEX")
 	dbGetQuery(con, paste("ALTER TABLE", original.table, "RENAME TO", backup.table))
 	dbGetQuery(con, paste("DROP TABLE", temp.table))
 	dbGetQuery(con, paste("ALTER TABLE ", temp.table, "_2 RENAME TO ", original.table, sep=""))

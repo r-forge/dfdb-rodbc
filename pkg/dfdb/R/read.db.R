@@ -41,6 +41,7 @@ read.db <- function(file, dsname, database=paste(dsname, ".db", sep=""),
         chunk.size <- round(multiple*initial)
     }
     last.row <- initial
+	i <- 0
     repeat {
         chunk <- read.table(file, header=FALSE, nrows=chunk.size, skip=last.row + header, 
             colClasses=colClasses, col.names=col.names, ...)
@@ -51,6 +52,10 @@ read.db <- function(file, dsname, database=paste(dsname, ".db", sep=""),
             stop("SQL write error")
         last.row <- last.row + nrow
         if (nrow < chunk.size) break
+		remove(chunk)
+		gc(verbose=TRUE)
+		i <- i + 1
+		cat(paste(" ", i))
     }
     cat(paste(last.row, "records read.\n"))
     invisible(NULL)
