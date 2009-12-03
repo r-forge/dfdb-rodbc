@@ -12,7 +12,7 @@ Create an SQLiteDataset pseudo-data-frame object.
 }
 
 \usage{
-SQLiteDataset(conn, table, rownames, stringsAsFactors=default.stringsAsFactors())
+SQLiteDataset(conn, table, rownames=TRUE, stringsAsFactors=default.stringsAsFactors())
 \method{print}{SQLiteDataset}(x, ..., verbose=FALSE)
 \method{summary}{SQLiteDataset}(object, ..., rows)
 }
@@ -20,7 +20,7 @@ SQLiteDataset(conn, table, rownames, stringsAsFactors=default.stringsAsFactors()
 \arguments{
   \item{conn}{a connection to a SQLite database.}
   \item{table}{the quoted name of a data table in the database.}
-  \item{rownames}{\code{TRUE} if the first character variable in the data base contains row names; \code{FALSE} if there is no row names variable. If not specified, the function will look for a suitable variable in the data base.}
+  \item{rownames}{\code{TRUE} (the default) if the first character variable in the data base contains row names; \code{FALSE} if there is no row-names variable; otherwise the column name or number containing the row-names variable.}
   \item{stringsAsFactors}{if \code{TRUE} (the default), character variables are treated as factors; the conversion is done when data are retrieved from the data table.}
   \item{x, object}{an object of class \code{SQLiteDataSet}.}
   \item{verbose}{if \code{TRUE} (the default is \code{FALSE}), the \emph{whole} data set is retrieved and printed; otherwise just some information about the data set is printed.}
